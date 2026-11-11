@@ -1,1 +1,16 @@
-{"name":"kos-system","version":"1.0.0","private":true,"engines":{"node":">=20"},"scripts":{"test":"node --test"},"dependencies":{"bcryptjs":"^2.4.3","jsonwebtoken":"^9.0.2","pg":"^8.13.1"}}
+{
+  "name": "kos-system",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1"
+  }
+}
