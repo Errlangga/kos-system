@@ -8,7 +8,7 @@
 <script>
 const $=s=>document.querySelector(s);let me=null,role='tenant',tab='dashboard',dash=null,pub={};const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID'),date=d=>d?new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'—';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function api(p,o={}){let r=await fetch('/api/'+p,{...o,credentials:'same-origin',headers:{'Content-Type':'application/json',...(o.headers||{})}}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Permintaan gagal');return d}
+async function api(p,o={}){let r=await fetch('/api/'+p,{...o,credentials:'same-origin',headers:{'Content-Type':'application/json',...(o.headers||{})}}),raw=await r.text(),d;try{d=raw?JSON.parse(raw):{}}catch{throw Error('Respons server tidak valid (HTTP '+r.status+').')}if(!r.ok)throw Error(d.error||('Permintaan gagal (HTTP '+r.status+').'));return d}
 function toast(s){let e=$('#toast');e.textContent=s;e.style.display='block';setTimeout(()=>e.style.display='none',2500)}
 function pill(s){let n={paid:'Lunas',pending:'Menunggu',unpaid:'Belum lunas',failed:'Gagal',expired:'Kedaluwarsa',menunggu:'Menunggu',diproses:'Diproses',selesai:'Selesai'};return '<span class="pill '+esc(s)+'">'+(n[s]||esc(s))+'</span>'}
 function loginView(){$('#app').classList.add('hide');$('#login').classList.remove('hide')}
