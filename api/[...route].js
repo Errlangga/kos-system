@@ -1,6 +1,6 @@
 const {Pool}=require('pg'),bcrypt=require('bcryptjs'),jwt=require('jsonwebtoken'),crypto=require('node:crypto');
 let pool;
-function db(){if(!process.env.DATABASE_URL)throw Error('DATABASE_URL belum diatur');return pool||(pool=new Pool({connectionString:process.env.DATABASE_URL,ssl:{rejectUnauthorized:false},max:5}));}
+function db(){if(!process.env.DATABASE_URL)throw Error('DATABASE_URL belum diatur');let url=new URL(process.env.DATABASE_URL);url.searchParams.set('sslmode','verify-full');return pool||(pool=new Pool({connectionString:url.toString(),max:5}));}
 function out(res,status,data){res.statusCode=status;res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(data));}
 async function body(req){if(req.body&&typeof req.body==='object')return req.body;let s='';for await(const c of req){s+=c;if(s.length>1000000)throw Error('Payload terlalu besar');}return s?JSON.parse(s):{};}
 function secret(){if(!process.env.SESSION_SECRET||process.env.SESSION_SECRET.length<32)throw Error('SESSION_SECRET minimal 32 karakter');return process.env.SESSION_SECRET;}
