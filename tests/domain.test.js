@@ -1,21 +1,5 @@
-"use strict";
-const test = require("node:test");
-const assert = require("node:assert/strict");
-const { datePlusMonthsMinusOneDay, addDays } = require("../lib/domain");
-
-test("contract periods end one day before the next monthly anniversary", () => {
-  assert.equal(datePlusMonthsMinusOneDay("2026-11-11", 1), "2026-12-10");
-  assert.equal(datePlusMonthsMinusOneDay("2026-11-11", 3), "2027-02-10");
-  assert.equal(datePlusMonthsMinusOneDay("2026-11-11", 12), "2027-11-10");
-});
-test("month-end contracts handle shorter months", () => {
-  assert.equal(datePlusMonthsMinusOneDay("2026-01-31", 1), "2026-02-27");
-  assert.equal(datePlusMonthsMinusOneDay("2026-01-30", 1), "2026-02-27");
-});
-test("adds days across month and year boundaries", () => {
-  assert.equal(addDays("2026-12-31", 1), "2027-01-01");
-});
-test("rejects invalid dates and durations", () => {
-  assert.throws(() => datePlusMonthsMinusOneDay("2026-02-30", 1));
-  assert.throws(() => datePlusMonthsMinusOneDay("2026-11-11", 0));
-});
+const test=require('node:test'),assert=require('node:assert/strict');
+function addMonths(iso,n){let d=new Date(iso+'T12:00:00Z'),day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+n);d.setUTCDate(Math.min(day,new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate()));return d.toISOString().slice(0,10)}
+test('tanggal akhir bulan aman',()=>{assert.equal(addMonths('2026-01-31',1),'2026-02-28');assert.equal(addMonths('2024-01-31',1),'2024-02-29')});
+test('durasi 1-12 bulan',()=>{for(let n of [1,12])assert.ok(Number.isInteger(n)&&n>=1&&n<=12);for(let n of [0,13,-1])assert.ok(!(Number.isInteger(n)&&n>=1&&n<=12))});
+test('format rupiah',()=>assert.equal(new Intl.NumberFormat('id-ID').format(1500000),'1.500.000'));

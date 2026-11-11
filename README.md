@@ -1,30 +1,23 @@
 # Kos Digital
 
-Portal digital sederhana untuk pemilik dan penyewa kos. Dibangun dengan Node.js serverless functions di Vercel dan PostgreSQL Neon.
+Aplikasi kos untuk pemilik dan penyewa. Frontend HTML/CSS/JS, backend Vercel Node.js Function, database PostgreSQL Neon.
 
 ## Fitur
+- Login admin dan penyewa memakai cookie HttpOnly, password bcrypt, dan pembatasan percobaan login.
+- Dashboard, kelola kamar dan penyewa, tarif sewa awal/bulanan.
+- Riwayat pembayaran, keluhan dan tindak lanjut admin.
+- Perpanjangan kontrak 1-12 bulan, Midtrans Snap QRIS dan webhook signature.
 
-- Login pemilik dan penyewa memakai session cookie HTTP-only, password hash scrypt, dan pembatasan percobaan login.
-- Dashboard berbeda untuk admin dan penyewa.
-- Data kamar, penghuni, harga sewa, dan tanggal kontrak.
-- Tagihan sewa awal, riwayat pembayaran, status lunas/belum lunas, dan perpanjangan 1/2/3/6/12 bulan.
-- Form keluhan dengan status menunggu, diproses, selesai, serta catatan admin.
-- Pengaturan nama kos, alamat, harga sewa bulanan default, dan harga sewa awal.
-- Audit log aktivitas penting.
-- Integrasi QRIS Midtrans melalui charge API dan verifikasi webhook signature SHA-512.
+## Deploy
+Import repo Errlangga/kos-system ke Vercel. Framework Preset Other, Root Directory `.`, Build/Output kosong/default. Jalankan npm install lalu deploy. Isi environment dari .env.example.
 
-## Environment variables Vercel
+## Neon
+Gunakan pooled connection string Neon pada DATABASE_URL dengan sslmode=require. Untuk database kosong jalankan database/schema.sql. Database kos_digital yang sebelumnya dibuat sudah memiliki tabel inti.
 
-- `DATABASE_URL`: connection string database `kos_digital` pada branch Neon `kos-digital`.
-- `SESSION_SECRET`: secret acak minimal 32 karakter.
-- `MIDTRANS_SERVER_KEY`: Server Key merchant Midtrans, disimpan sebagai sensitive secret.
-- `MIDTRANS_IS_PRODUCTION`: `false` untuk sandbox dan `true` untuk production.
+## Admin
+Set ADMIN_USERNAME, ADMIN_PASSWORD (password unik kuat), ADMIN_DISPLAY_NAME. Jika belum ada admin, akun pertama dibuat otomatis saat login admin. Segera ganti password sementara.
 
-Set `DATABASE_URL` dan `SESSION_SECRET` untuk Production dan Preview. Jangan commit rahasia ke GitHub.
+## Midtrans
+Isi MIDTRANS_SERVER_KEY, MIDTRANS_CLIENT_KEY, MIDTRANS_IS_PRODUCTION=false untuk sandbox, APP_URL dengan domain deploy. Atur Payment Notification URL menjadi https://DOMAIN/api/webhook dan aktifkan QRIS. Uji sandbox dan webhook sebelum production. Server Key rahasia dan tidak boleh diletakkan di frontend.
 
-## Mengaktifkan QRIS
-
-1. Aktifkan merchant Midtrans dan pastikan metode QRIS tersedia pada akun.
-2. Tambahkan Server Key sandbox ke `MIDTRANS_SERVER_KEY` di Vercel.
-3. Set `MIDTRANS_IS_PRODUCTION=false` untuk transaksi uji sandbox.
-4. Atur Payment Notification URL Midtrans ke `https://DOMAIN-¶»§q«^
+Tes: npm test. Pembayaran riil belum aktif sampai kredensial Midtrans dipasang dan diuji.
